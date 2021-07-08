@@ -1,0 +1,18 @@
+{
+    "rtDataUrlBase": "http://localhost/api",
+    "isRandom": true,
+    "entities": [
+        ["Chhattisgarh", "", "", ""],
+        ["DNH", "", "", ""],
+        ["DD", "", "", ""],
+        ["Goa", "", "", ""],
+        ["Gujarat", "", "", ""],
+        ["Madhya Pradesh", "", "", ""],
+        ["Maharashtra", "", "", ""]
+    ],
+    "reportType": "d",
+    "dateInput": null,
+    "outputFolder": "output",
+    "templatePath": "templates/report_template.docx",
+    "reportPrefix": "rel_ind_daily_report"
+}
