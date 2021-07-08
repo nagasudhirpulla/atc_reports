@@ -1,5 +1,5 @@
 {
-    "rtDataUrlBase": "http://localhost/api",
+    "apiUrlBase": "http://localhost/api",
     "isRandom": true,
     "entities": [
         ["Chhattisgarh", "", "", ""],

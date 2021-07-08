@@ -14,9 +14,9 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--config", help="Config json file path",
                     default="config/config.json")
 args = parser.parse_args()
-configFilePath = args.config
 
 # read application configuration json
+configFilePath = args.config
 appConf = loadAppConfig(configFilePath)
 reportType: str = appConf["reportType"]
 
