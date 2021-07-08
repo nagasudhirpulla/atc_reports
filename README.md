@@ -11,7 +11,7 @@
 * dateInput - input date for report in the format "%Y-%m-%d" (example: 2021-12-31), for default value keep it as null
 * outputFolder - Path of ouput folder where reports are dumped
 * templatePath - Path of report template file
-* reportPrefix - Prefi of the generated report file name
+* reportPrefix - Prefix of the generated report file name
 
 ## Workflow
 
