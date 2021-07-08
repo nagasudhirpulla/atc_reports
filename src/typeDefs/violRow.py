@@ -5,5 +5,5 @@ class IViolRow(TypedDict):
     srNum: int
     stateName: str
     numBlks: int
-    num_hrs: float
-    perc_hrs: float
+    numHrs: float
+    percHrs: float

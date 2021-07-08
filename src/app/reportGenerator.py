@@ -3,10 +3,10 @@ import os
 
 from docxtpl import DocxTemplate
 from src.app.getDateRangeForInpDt import getDateRangeForInpDt
+from src.app.getViolRowForEnt import getViolRowForEnt
 from src.config.appConfig import getAppConfig
 from src.logging.appLogger import getAppLogger
 from src.typeDefs.reportContext import IReportCxt
-from src.services.dataFetcher import fetchPntHistData
 
 
 class ReportGenerator:
@@ -56,21 +56,26 @@ class ReportGenerator:
         outputFolder = self.appConf["outputFolder"]
         reportFilePath = os.path.join(outputFolder, reportFilename)
 
-        # TODO generate atc violation rows
+        # generate atc and ttc violation rows
         atcViolRows = []
-
-        # TODO generate ttc violation rows
         ttcViolRows = []
+
         entities = self.appConf["entities"]
         apiBaseUrl: str = self.appConf["apiUrlBase"]
         isRandom: bool = self.appConf["isRandom"]
-        for ent in entities:
+        for rIter, ent in enumerate(entities):
             entName = ent[0]
             drawalPnt = ent[1]
             atcPnt = ent[2]
             ttcPnt = ent[3]
-            drawalRows = fetchPntHistData(
-                drawalPnt, apiBaseUrl, startDt, endDt, 'average', 900, self.appLogger, isRandom)
+            (atcRow, ttcRow) = getViolRowForEnt(apiBaseUrl, startDt,
+                                                endDt, entName, drawalPnt, atcPnt, ttcPnt, isRandom)
+            if not atcRow == None:
+                atcRow["srNum"] = rIter+1
+                atcViolRows.append(atcRow)
+            if not ttcRow == None:
+                ttcRow["srNum"] = rIter+1
+                ttcViolRows.append(ttcRow)
 
         # create context for weekly reoport
         reportContext: IReportCxt = {
