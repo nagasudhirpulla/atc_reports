@@ -4,7 +4,7 @@
 * Monthly
 
 ## config file
-* rtDataUrlBase - base url of data api
+* apiUrlBase - base url of data api
 * isRandom - use random data for testing purposes
 * entities - array of entities. Each entity is defined by the array ```["Name", "drawal pnt", "atc pnt", "ttc pnt"]```
 * reportType - one of d(daily), w(weekly), m(monthly)
@@ -12,8 +12,6 @@
 * outputFolder - Path of ouput folder where reports are dumped
 * templatePath - Path of report template file
 * reportPrefix - Prefix of the generated report file name
-
-## Workflow
 
 ### Deriving default date input
 * Check for report type
