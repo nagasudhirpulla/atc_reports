@@ -10,8 +10,8 @@ project_env/
 # Distribution / packaging 
 .Python build/ 
 develop-eggs/ 
-dist/*
-!dist/*.bat
+atc_reports_dist/*
+!atc_reports_dist/*.bat
 downloads/ 
 eggs/ 
 .eggs/ 
