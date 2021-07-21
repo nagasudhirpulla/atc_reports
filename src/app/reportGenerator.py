@@ -37,18 +37,18 @@ class ReportGenerator:
         reportHeading = ""
         reportFilename = ""
         if reportType == "d":
-            reportHeading = "System Reliability Indices Report for {0}".format(
+            reportHeading = "दैनिक प्रणाली विश्वसनीयता सूचकांक की आख्या दिनाँक /Daily System Reliability Indices Report for {0}".format(
                 startDateReportString)
             reportFilename = "{0}_{1}.docx".format(
                 reportPrefix, dt.datetime.strftime(startDt, '%Y_%m_%d'))
         elif reportType == "w":
-            reportHeading = "System Reliability Indices Report for the week from {0} to {1}".format(
+            reportHeading = "साप्ताहिक प्रणाली विश्वसनीयता सूचकांक की आख्या/ Weekly System Reliability Indices Report for the week {0} to {1}".format(
                 startDateReportString, endDateReportString)
             reportFilename = "{0}_{1}_{2}.docx".format(
                 reportPrefix, dt.datetime.strftime(startDt, '%Y_%m_%d'), dt.datetime.strftime(endDt, '%Y_%m_%d'))
         elif reportType == "m":
             startDateMonthStr = dt.datetime.strftime(startDt, '%B %Y')
-            reportHeading = "System Reliability Indices Report for the month of {0}".format(
+            reportHeading = "मासिक प्रणाली विश्वसनीयता सूचकांक की आख्या/ Monthly System Reliability Indices Report for {0}".format(
                 startDateMonthStr)
             reportFilename = "{0}_{1}.docx".format(
                 reportPrefix, dt.datetime.strftime(startDt, '%Y_%m'))

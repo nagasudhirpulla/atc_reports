@@ -7,7 +7,7 @@ appConf = {}
 
 def loadAppConfig(fName="config/config.json"):
     # load config json into the global variable
-    with open(fName) as f:
+    with open(fName, encoding='utf-8') as f:
         global appConf
         appConf = json.load(f)
         return appConf
