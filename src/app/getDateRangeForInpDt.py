@@ -7,7 +7,7 @@ from src.app.timeUtils import addMonths, getMondayBeforeDt, getSundayAfterDt
 def getDateRangeForInpDt(inpDt: dt.datetime, repType: str) -> Tuple[dt.datetime, dt.datetime]:
     startDt = None
     endDt = None
-    if repType == "d":
+    if repType in ["d", "ds"]:
         startDt = dt.datetime(inpDt.year, inpDt.month, inpDt.day)
         endDt = dt.datetime(inpDt.year, inpDt.month, inpDt.day, 23, 59)
     elif repType == "w":

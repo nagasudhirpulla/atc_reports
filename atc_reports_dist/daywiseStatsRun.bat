@@ -1,0 +1,1 @@
+call index.exe --config daywiseStatsRun.json

@@ -12,7 +12,7 @@ def createDefaultDateInput(repType: str) -> dt.datetime:
     elif repType == 'w':
         resDt = nowDt-dt.timedelta(days=7)
         resDt = dt.datetime(resDt.year, resDt.month, resDt.day)
-    elif repType == 'm':
+    elif repType in ['m', 'ds']:
         resDt = dt.datetime(nowDt.year, nowDt.month, 1)
         resDt = addMonths(resDt, -1)
     return resDt

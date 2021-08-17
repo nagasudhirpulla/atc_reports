@@ -1,6 +1,7 @@
 import datetime as dt
 import os
 
+import pandas as pd
 from docxtpl import DocxTemplate
 from src.app.getDateRangeForInpDt import getDateRangeForInpDt
 from src.app.getViolRowForEnt import getViolRowForEnt
@@ -41,6 +42,9 @@ class ReportGenerator:
                 startDateReportString)
             reportFilename = "{0}_{1}.docx".format(
                 reportPrefix, dt.datetime.strftime(startDt, '%Y_%m_%d'))
+        elif reportType == "ds":
+            reportHeading = ""
+            reportFilename = ""
         elif reportType == "w":
             reportHeading = "साप्ताहिक प्रणाली विश्वसनीयता सूचकांक की आख्या/ Weekly System Reliability Indices Report for the week {0} to {1}".format(
                 startDateReportString, endDateReportString)
@@ -127,3 +131,34 @@ class ReportGenerator:
         # convert report to pdf
         # convert(dumpFileFullPath, dumpFileFullPath.replace('.docx', '.pdf'))
         return isSuccess
+
+    def generateDaywiseStatsExcel(self, startDt: dt.datetime, endDt: dt.datetime) -> bool:
+        if startDt > endDt:
+            return False
+        reportAtcRows = []
+        reportTtcRows = []
+        for targetDt in pd.date_range(start=startDt, end=endDt, freq='D'):
+            targetDt: dt.datetime = targetDt.to_pydatetime()
+            reportCtxt = self.getReportContextObj(targetDt)
+            for atcRow in reportCtxt["atcViolRows"]:
+                reportAtcRows.append(
+                    [targetDt.date(), atcRow["stateName"], atcRow["numBlks"], atcRow["numHrs"], atcRow["percHrs"]])
+            for ttcRow in reportCtxt["ttcViolRows"]:
+                reportTtcRows.append(
+                    [targetDt.date(), ttcRow["stateName"], ttcRow["numBlks"], ttcRow["numHrs"], ttcRow["percHrs"]])
+        # derive the report excel file path
+        reportPrefix = self.appConf["reportPrefix"]
+        startDtStr = dt.datetime.strftime(startDt, '%Y_%m_%d')
+        endDtStr = dt.datetime.strftime(endDt, '%Y_%m_%d')
+        reportFilename = "{0}_{1}_{2}.xlsx".format(
+            reportPrefix, startDtStr, endDtStr)
+        outputFolder = self.appConf["outputFolder"]
+        reportFilePath = os.path.join(outputFolder, reportFilename)
+        # export data to the report excel file path
+        with pd.ExcelWriter(reportFilePath) as writer:
+            dfCols = ["Date", "Name", "NumBlocks", "NumHrs", "PercentageHrs"]
+            pd.DataFrame(data=reportAtcRows, columns=dfCols).to_excel(
+                writer, index=False, sheet_name='atc')
+            pd.DataFrame(data=reportTtcRows, columns=dfCols).to_excel(
+                writer, index=False, sheet_name='ttc')
+        return True

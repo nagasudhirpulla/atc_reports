@@ -3,6 +3,7 @@ import datetime as dt
 
 from src.app.createDefaultDateInput import createDefaultDateInput
 from src.app.reportGenerator import ReportGenerator
+from src.app.timeUtils import addMonths
 from src.config.appConfig import loadAppConfig
 from src.logging.appLogger import initAppLogger
 
@@ -24,7 +25,7 @@ reportType: str = appConf["reportType"]
 defaultInpDate = createDefaultDateInput(reportType)
 if defaultInpDate == None:
     logger.error(
-        "Unable to get default input date, please check if reportType is either d, w, m...")
+        "Unable to get default input date, please check if reportType is either d, w, m, ds...")
     exit()
 
 # derive input date
@@ -36,7 +37,24 @@ if not dateInpStr == None:
 
 # generate report
 rprtGntr = ReportGenerator()
-isReportGenSuccess: bool = rprtGntr.generateReport(dateInp)
+isReportGenSuccess: bool = False
+if reportType in ["d", "w", "m"]:
+    isReportGenSuccess = rprtGntr.generateReport(dateInp)
+elif reportType == "ds":
+    # derive default end date from start date
+    defaultEndDate = addMonths(dt.datetime(
+        dateInp.year, dateInp.month, 1), 1) - dt.timedelta(days=1)
+    # derive end date
+    endDt = defaultEndDate
+    endDateKey = "endDate"
+    if endDateKey in appConf:
+        endDateStr = appConf[endDateKey]
+        if not endDateStr == None:
+            endDt = dt.datetime.strptime(endDateStr, "%Y-%m-%d")
+    # generate report
+    isReportGenSuccess = rprtGntr.generateDaywiseStatsExcel(
+        startDt=dateInp, endDt=endDt)
+
 if isReportGenSuccess:
     logger.info('System Reliability report file generation done!')
 else:
