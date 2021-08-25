@@ -66,14 +66,14 @@ class ReportGenerator:
 
         entities = self.appConf["entities"]
         apiBaseUrl: str = self.appConf["apiUrlBase"]
-        isRandom: bool = self.appConf["isRandom"]
+        dataSource: str = self.appConf.get("dataSource", "scada")
         for rIter, ent in enumerate(entities):
             entName = ent[0]
             drawalPnt = ent[1]
             atcPnt = ent[2]
             ttcPnt = ent[3]
             (atcRow, ttcRow) = getViolRowForEnt(apiBaseUrl, startDt,
-                                                endDt, entName, drawalPnt, atcPnt, ttcPnt, isRandom)
+                                                endDt, entName, drawalPnt, atcPnt, ttcPnt, dataSource)
             if not atcRow == None:
                 atcRow["srNum"] = rIter+1
                 atcViolRows.append(atcRow)

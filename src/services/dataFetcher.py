@@ -1,8 +1,10 @@
 import datetime as dt
 import json
+import logging
 import random
 
 import requests
+import pandas as pd
 
 
 def makeTwoDigits(num):
@@ -11,9 +13,14 @@ def makeTwoDigits(num):
     return num
 
 
-def fetchPntHistData(pnt, baseUrl: str, startTime: dt.datetime, endTime: dt.datetime, fetchStrategy: str = 'snap', secs: int = 60, logger=None, isRandom: bool = False):
-    if isRandom:
+def fetchPntHistData(pnt, baseUrl: str, startTime: dt.datetime, endTime: dt.datetime, fetchStrategy: str = 'snap', secs: int = 60, logger=logging.getLogger(), dataSource: str = "scada"):
+    logger.info("ts={0}, pnt={1}, startTime={2}, endTime={3}, fetchStrategy={4}, secs={5}, dataSource={6}".format(
+        dt.datetime.now(), pnt, startTime, endTime, fetchStrategy, secs, dataSource))
+
+    if dataSource.lower() == "random":
         return fetchPntHistDataRandom(startTime, endTime, secs)
+    elif dataSource.lower() == "excel":
+        return fetchPntHistDataExcel(pnt, startTime, endTime, dataFilename="data/atc_data.xlsx")
 
     startTimeStr = startTime.strftime('%d/%m/%Y/%H:%M:%S')
     endTimeStr = endTime.strftime('%d/%m/%Y/%H:%M:%S')
@@ -51,4 +58,20 @@ def fetchPntHistDataRandom(startTime: dt.datetime, endTime: dt.datetime, secs: i
                      "timestamp": dt.datetime.strftime(curTime, "%Y-%m-%dT%H:%M:%S"),
                      "status": "GOOD"})
         curTime += dt.timedelta(seconds=samplPeriod)
+    return data
+
+
+def fetchPntHistDataExcel(pnt: str, startTime: dt.datetime, endTime: dt.datetime, dataFilename):
+    data = []
+    if startTime > endTime:
+        return data
+    # read data from excel file
+    dataDf = pd.read_excel(dataFilename, index_col=0)
+    dataDf = dataDf[pnt]
+    dataDf = dataDf[(dataDf.index >= startTime) & (dataDf.index <= endTime)]
+
+    for itr in range(len(dataDf)):
+        data.append({"dval": dataDf.iloc[itr],
+                     "timestamp": dataDf.index[itr].to_pydatetime(),
+                     "status": "GOOD"})
     return data
