@@ -6,6 +6,8 @@ import random
 import requests
 import pandas as pd
 
+excelDataDf = pd.DataFrame()
+
 
 def makeTwoDigits(num):
     if(num < 10):
@@ -65,9 +67,13 @@ def fetchPntHistDataExcel(pnt: str, startTime: dt.datetime, endTime: dt.datetime
     data = []
     if startTime > endTime:
         return data
-    # read data from excel file
-    dataDf = pd.read_excel(dataFilename, index_col=0)
-    dataDf = dataDf[pnt]
+
+    global excelDataDf
+    if excelDataDf.empty:
+        # read data from excel file
+        excelDataDf = pd.read_excel(dataFilename, index_col=0)
+
+    dataDf = excelDataDf[pnt]
     dataDf = dataDf[(dataDf.index >= startTime) & (dataDf.index <= endTime)]
 
     for itr in range(len(dataDf)):
