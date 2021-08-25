@@ -6,7 +6,7 @@
 
 ## config file
 * apiUrlBase - base url of data api
-* isRandom - use random data for testing purposes
+* dataSource - one of random, scada, excel
 * entities - array of entities. Each entity is defined by the array ```["Name", "drawal pnt", "atc pnt", "ttc pnt"]```
 * reportType - one of d(daily), w(weekly), m(monthly), ds(daily stats)
 * dateInput - input date for report in the format "%Y-%m-%d" (example: 2021-12-31), for default value keep it as null
@@ -26,3 +26,8 @@
 * For daily report the date range will be 0 to 24 hrs of date input
 * For weekly report the date range will be 0 hrs of the week start date (Monday) to 24 hrs of week end date (Sunday) of date input
 * For monthly report the date range will be 0 hrs of the month start date to 24 hrs of month end date of date input
+
+### Excel data source
+* If excel data source is being used, make sure that left most column is the timestamps column
+* The headers should match the pnt ids in the ```entities``` section of the config file
+* Currently sorting by timestamps is not taken care of in excel data fetching
