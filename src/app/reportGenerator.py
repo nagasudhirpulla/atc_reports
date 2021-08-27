@@ -85,6 +85,8 @@ class ReportGenerator:
         reportContext: IReportCxt = {
             "reportFilePath": reportFilePath,
             "reportHeading": reportHeading,
+            "startDt": startDt,
+            "endDt": endDt,
             "reportDtObj": reportDt,
             "reportDt": reportDtStr,
             "atcViolRows": atcViolRows,

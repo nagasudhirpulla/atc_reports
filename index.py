@@ -1,5 +1,6 @@
 import argparse
 import datetime as dt
+from typing import Optional
 
 from src.app.createDefaultDateInput import createDefaultDateInput
 from src.app.reportGenerator import ReportGenerator
@@ -34,23 +35,27 @@ dateInp = defaultInpDate
 if not dateInpStr == None:
     dateInp = dt.datetime.strptime(dateInpStr, "%Y-%m-%d")
 
+endDateStr = appConf.get("endDate", None)
+endDt: Optional[dt.datetime] = None
+if not endDateStr == None:
+    endDt = dt.datetime.strptime(endDateStr, "%Y-%m-%d")
 
 # generate report
 rprtGntr = ReportGenerator()
 isReportGenSuccess: bool = False
 if reportType in ["d", "w", "m"]:
+    # derive end date
+    endDt = endDt or dateInp
+    
     isReportGenSuccess = rprtGntr.generateReport(dateInp)
 elif reportType == "ds":
     # derive default end date from start date
     defaultEndDate = addMonths(dt.datetime(
         dateInp.year, dateInp.month, 1), 1) - dt.timedelta(days=1)
+
     # derive end date
-    endDt = defaultEndDate
-    endDateKey = "endDate"
-    if endDateKey in appConf:
-        endDateStr = appConf[endDateKey]
-        if not endDateStr == None:
-            endDt = dt.datetime.strptime(endDateStr, "%Y-%m-%d")
+    endDt = endDt or defaultEndDate
+
     # generate report
     isReportGenSuccess = rprtGntr.generateDaywiseStatsExcel(
         startDt=dateInp, endDt=endDt)
