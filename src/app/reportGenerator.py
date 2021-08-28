@@ -120,18 +120,28 @@ class ReportGenerator:
             return False
         return True
 
-    def generateReport(self, dateInp: dt.datetime) -> bool:
+    def generateReport(self, dateInp: dt.datetime, endDt: dt.datetime) -> bool:
         """generates and dumps weekly report for given dates at a desired location based on a template file
         Args:
             dateInp (dt.datetime): input date
         Returns:
             bool: True if process is success, else False
         """
-        reportCtxt = self.getReportContextObj(dateInp)
-        isSuccess = self.generateReportWithContext(
-            reportCtxt)
-        # convert report to pdf
-        # convert(dumpFileFullPath, dumpFileFullPath.replace('.docx', '.pdf'))
+        runLoop: bool = True
+        targetDt: dt.datetime = dateInp
+        while runLoop:
+            reportCtxt = self.getReportContextObj(targetDt)
+            isSuccess = self.generateReportWithContext(
+                reportCtxt)
+            # convert report to pdf
+            # convert(dumpFileFullPath, dumpFileFullPath.replace('.docx', '.pdf'))
+
+            # derive target date for next iteration
+            targetDt = reportCtxt["endDt"] + dt.timedelta(days=1)
+            targetDt = dt.datetime(targetDt.year, targetDt.month, targetDt.day)
+
+            # decide whether to perform next iteration
+            runLoop = True if (targetDt <= endDt) else False
         return isSuccess
 
     def generateDaywiseStatsExcel(self, startDt: dt.datetime, endDt: dt.datetime) -> bool:

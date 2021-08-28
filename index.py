@@ -40,14 +40,17 @@ endDt: Optional[dt.datetime] = None
 if not endDateStr == None:
     endDt = dt.datetime.strptime(endDateStr, "%Y-%m-%d")
 
-# generate report
+# create a report generator instance
 rprtGntr = ReportGenerator()
+
 isReportGenSuccess: bool = False
+
 if reportType in ["d", "w", "m"]:
     # derive end date
     endDt = endDt or dateInp
-    
-    isReportGenSuccess = rprtGntr.generateReport(dateInp)
+
+    # generate report
+    isReportGenSuccess = rprtGntr.generateReport(dateInp, endDt)
 elif reportType == "ds":
     # derive default end date from start date
     defaultEndDate = addMonths(dt.datetime(
