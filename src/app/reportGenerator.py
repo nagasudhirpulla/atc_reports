@@ -8,7 +8,7 @@ from src.app.getViolRowForEnt import getViolRowForEnt
 from src.config.appConfig import getAppConfig
 from src.logging.appLogger import getAppLogger
 from src.typeDefs.reportContext import IReportCxt
-
+from docx2pdf import convert
 
 class ReportGenerator:
 
@@ -114,6 +114,9 @@ class ReportGenerator:
 
             # save the report as a word file
             doc.save(reportFilePath)
+
+            # convert report to pdf
+            convert(reportFilePath, reportFilePath.replace('.docx', '.pdf'))
         except Exception as err:
             self.appLogger.error(
                 "error while saving report from context", exc_info=err)
@@ -132,9 +135,7 @@ class ReportGenerator:
         while runLoop:
             reportCtxt = self.getReportContextObj(targetDt)
             isSuccess = self.generateReportWithContext(
-                reportCtxt)
-            # convert report to pdf
-            # convert(dumpFileFullPath, dumpFileFullPath.replace('.docx', '.pdf'))
+                reportCtxt)            
 
             # derive target date for next iteration
             targetDt = reportCtxt["endDt"] + dt.timedelta(days=1)
